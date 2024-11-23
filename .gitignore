@@ -10,7 +10,7 @@ renv/staging/
 *.log
 sample_10k_peaks.R
 Example_dataset/Output/
-Example_dataset/primates.hal
+Example_dataset/Figures/
 
 # Ignore system files
 .DS_Store
