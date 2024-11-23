@@ -1,0 +1,20 @@
+# Ignore R environment files
+.Rproj.user/
+.Rhistory
+.RData
+.Renviron
+renv/library/
+renv/staging/
+
+# Ignore logs and results from test run
+*.log
+sample_10k_peaks.R
+Example_dataset/Output/
+Example_dataset/primates.hal
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+#Ignore README files (updated manually)
+README_figure
