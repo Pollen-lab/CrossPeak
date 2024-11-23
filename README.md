@@ -34,6 +34,7 @@ Zev N. Kronenberg et al. ,High-resolution comparative analysis of great ape geno
 
 ## Details
 Summary of the CrossPeak pipeline:
+![CrossPeak Summary](README_figure/CrossPeak_summary.png)
 
 ### Preprocessing:
 CrossPeak takes as input a single peak set of summit-centered ATAC-seq peaks for each species in the analysis. The peak set can be generated with any tool, but the summits must be exactly centered with equal numbers of base pairs on either side (for example, peaks could be 501 bp in width with a 250-bp half-width). If using MACS2 with standard parameters, the peaks will need to be postprocessed to center the summits and chose a fixed width. If using CrossPeak with single cell ATAC-seq data with peaks called for each cell type, the user must choose whether they want one set of cross-species consensus peaks for each cell type (in which case the pipeline must be run once for each cell type) or whether they want one set of cross-species consensus peaks for the entire dataset, in which case they must collapse the peak sets for each cell type into one unified peak set across all cell types. We suggest using iterative overlap peak merging (https://www.archrproject.com/bookdown/the-iterative-overlap-peak-merging-procedure.html) for this purpose, which is implemented in packages like ArchR and ScenicPlus.

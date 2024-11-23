@@ -16,5 +16,5 @@ Example_dataset/primates.hal
 .DS_Store
 Thumbs.db
 
-#Ignore README files (updated manually)
-README_figure
+#Other files
+README_figure/CrossPeak_summary.ai
