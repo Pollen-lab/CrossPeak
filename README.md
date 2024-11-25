@@ -100,10 +100,13 @@ In order to include as many peaks as possible in the consensus set, we offer the
 Peaks that fall in categories 1-4 for all pairs of species are added to the consensus peak set with the category for each species included in the metadata. Peaks that fall in categories 5-7 for all pairs of species are classified as “species-only peaks” for that species. Peaks that fall into different sets of categories (for example, category 1 for one species and category 6 for another species) are excluded as are peaks with multi-mapping summits or failed summits and multi-mapping peaks. Round 2 peaks that overlap round 1 peaks by more than the overlap tolerance are also excluded. Finally, peaks that overlap blacklisted regions or are located on excluded chromosomes for any species are excluded for all species.
 
 #### Step D: Reciprocal liftover for round 2 peaks
+Lifts the results of step 7 (round 2 consensus peaks) back to the original species genome (reciprocal liftover confirms a 1:1 relationship across species for all consensus peaks).
+
 
 #### Step 8: Final cleanup and export results
+Similar to Step 5, this step removes any round 2 peaks that failed to lift back to the correct location on the original species' genome. It also removes any round 2 peaks that overlap round 1 peaks by more than the overlap tolerance.
 
-#### Step 9: Prints a summary of how many peaks were retained and how many peaks were lost at each step
+#### Step 9: Prints summaries of how many peaks were retained and how many peaks were lost at each step
 
 #### Outputs:
 Files are saved in the Output folder as GenomicRanges objects in .rds files with the following names:
