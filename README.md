@@ -16,7 +16,7 @@ CrossPeak uses renv for package management and reproducibility. Install renv (ht
 install.packages('renv')
 renv::restore()
 ````
-CrossPeak requires the creation of an inferred ancestral genome and a way to lift over coordinates between individual species genomes and the ancestral genome. Although not strictly required by CrossPeak, our recommended workflow uses Hierarchical Alignment (HAL) format to create the ancestral genome and halLiftover to lift over coordinates. If you would like to use HAL with CrossPeak, follow the HAL installation instructions at https://github.com/ComparativeGenomicsToolkit/hal. If you run into any problems with installing HAL, we recommend you instead install HAL as part of cactus (https://github.com/ComparativeGenomicsToolkit/cactus/releases) via a Docker image. We provide an example script run_CrossPeak_example.sh that runs both the R steps and the halLiftover steps in one script and includes options for running the halLiftover steps with a local HAL installation or via the Docker image.
+CrossPeak requires the creation of an inferred ancestral genome and a way to lift over coordinates between individual species genomes and the ancestral genome. Although not strictly required by CrossPeak, our recommended workflow uses Hierarchical Alignment (HAL) format to create the ancestral genome and halLiftover to lift over coordinates. If you would like to use HAL with CrossPeak, follow the HAL installation instructions at https://github.com/ComparativeGenomicsToolkit/hal. If you run into any problems with installing HAL, we recommend you instead install HAL as part of cactus (https://github.com/ComparativeGenomicsToolkit/cactus/releases) via a Docker image. We provide an example script that runs both the R steps and the halLiftover steps in one script and includes options for running the halLiftover steps with a local HAL installation or via the Docker image.
 
 ## Citing
 
@@ -32,16 +32,21 @@ If you use the primate HAL file we provide in the Example_dataset folder for you
 Mao, Y., Catacchio, C.R., Hillier, L.W. et al. A high-quality bonobo genome refines the analysis of hominid evolution. Nature 594, 77–81 (2021). https://doi.org/10.1038/s41586-021-03519-x
 Zev N. Kronenberg et al. ,High-resolution comparative analysis of great ape genomes.Science360,eaar6343(2018).DOI:10.1126/science.aar6343
 
-## Details
+## Running CrossPeak
+
+### Running the example script:
+We provide an example Shell script that runs all of the CrossPeak and halLiftover steps with a single command: run_CrossPeak_example.sh. To run this script on the example dataset, users will need install CrossPeak and HAL and download the primate HAL file into the Exampe_datasets folder: https://www.dropbox.com/scl/fi/xp97bzed9tilmaluvllog/primates.hal?rlkey=vknl7zg0t36m3eb2d8d5tfo5c&st=z8gnao1x&dl=0 (note this file is ~30GB and may take a while to download). The file CrossPeak_parameters.R includes default parameters that we use to run the pipeline in our own hands so we recommend leaving this file unchanged for running the example dataset for the first time.
+
+### Running CrossPeak on your own dataset:
+ To run CrossPeak on your own dataset, you will need to modify the files run_CrossPeak_example.sh and CrossPeak_parameters.R to include the species in your analysis and your chosen parameters. The steps described below correspond to the steps listed in example script. Numbered steps take place in R while lettered steps (liftovers) require steps on the command line using HAL tools or other software. Steps 1-5 represent round 1 and steps 6-7 represent round 2 (described below). Numbered steps after a lettered step (for example, Step 2 which occurs after Step A) require bed files as input (specifics listed for each step below). If you use our recommended workflow with HAL and our example Shell script, correctly named files should be seamlessly imported and exported from R. If you use a different method for liftovers, then you will need to run the numbered R scripts individually and perform the lfitovers for lettered steps in the order described below, naming files accordingly.
+
+## Method details
 Summary of the CrossPeak pipeline:
 ![CrossPeak Summary](README_figure/CrossPeak_summary.png)
 
 ### Preprocessing:
 CrossPeak takes as input a single peak set of summit-centered ATAC-seq peaks for each species in the analysis. The peak set can be generated with any tool, but the summits must be exactly centered with equal numbers of base pairs on either side (for example, peaks could be 501 bp in width with a 250-bp half-width). If using MACS2 with standard parameters, the peaks will need to be postprocessed to center the summits and chose a fixed width. If using CrossPeak with single cell ATAC-seq data with peaks called for each cell type, the user must choose whether they want one set of cross-species consensus peaks for each cell type (in which case the pipeline must be run once for each cell type) or whether they want one set of cross-species consensus peaks for the entire dataset, in which case they must collapse the peak sets for each cell type into one unified peak set across all cell types. We suggest using iterative overlap peak merging (https://www.archrproject.com/bookdown/the-iterative-overlap-peak-merging-procedure.html) for this purpose, which is implemented in packages like ArchR and ScenicPlus.
 CrossPeak does not currently include preprocessing functions as there are many options and users may prefer to use different tools for their own datasets, but this may change in future releases.
-
-### Running CrossPeak:
-We provide an example script run_CrossPeak_script.R and a small example dataset (in the Example_dataset folder) of human, chimpanzee, and macaque peaks that you can run to see how the pipeline works. To run CrossPeak on your own dataset, you will need to modify the script run_CrossPeak_script.R to include the species in your analysis and your chosen parameters. The steps described below correspond to the steps listed in this file. Numbered steps take place in R while lettered steps (liftovers) require steps on the command line using HAL tools or other software. Steps 1-5 represent round 1 and steps 6-7 represent round 2 (described below). Numbered steps after a lettered step (for example, Step 2 which occurs after Step A) require bed files as input (specifics listed for each step below), so the code will crash if these are not provided. When you run the script on your own dataset, you will need to stop at each lettered step and run that step on the command line, ensuring the output files are saved in the working folder before continuing. For your first run, we recommend running each step individually and checking the outputs before proceeding.
 
 #### Setup: Choose species and save data structures to working folder
 CrossPeak can work with any species for which you have an inferred ancestral genome, a way to lift over coordinates between individual species genomes and the ancestral genome, and a blacklist of regions to exclude. We currently provide bed files with blacklists for human, chimpanzee, and macaque. To modify the pipeline to work with other species:
@@ -56,7 +61,7 @@ Peak files may be in .bed format or GenomicRanges objects in .rds format. Peak f
 #### Step A: Liftover from individual species genomes to ancestral genome
 Summits are lifted over from each individual species genome to the same ancestral genome.
 
-#### Step 2: Concatenate regions and make summits from peaks 
+#### Step 2: Concatenate regions and make summits from peaks
 Import: [species]_summits_lo.bed
 We take the union of the lifted ranges and exclude peaks that failed liftover, lifted to multiple chromosomes, or whose lifted summit widths are more than an indel tolerance (indel_tol, default is 5 bp) different from the original summit widths. Then, we rebuild peaks on the ancestral genome by extending the summits by 250 bp in each direction.
 
@@ -68,14 +73,14 @@ CrossPeak merges peaks in order of evolutionary relatedness, given by the order 
 #### Step B: Liftover the consensus peaks from the ancestral genome to individual species genomes
 Consensus summit regions are lifted over from the ancestral genome to each individual species genome.
 
-#### Step 4: Concatenate regions and make summits from peaks 
+#### Step 4: Concatenate regions and make summits from peaks
 Import: [species]_consensus_summits_[overlap_tol]_lo.bed
 We take the union of the lifted ranges and exclude peaks that failed liftover, lifted to multiple chromosomes, or whose lifted summit widths are more than an indel tolerance (default is 5 bp) different from the original summit widths. Then, we rebuild peaks on the individual species genomes by extending the summits by 250 bp in each direction.
 
 #### Step 5: Remove peaks that do not meet criteria from both species
-We compare the location of the consensus summits with the original summit location and exclude peaks with summits that are too far from the original summit or overlap blacklisted regions in any species. After this step, round 1 is complete and peaks in the consensus set are “round 1 consensus peaks.” If you only care about the highest confidence consensus peaks and do not care about species-specific peaks, you could end the analysis here.
+We compare the location of the consensus summits with the original summit location and exclude peaks with summits that are too far from the original summit or overlap blacklisted regions in any species. After this step, round 1 is complete and peaks in the consensus set are “round 1 consensus peaks.” See description under Outputs below. If you only care about the highest confidence consensus peaks and do not care about species-specific peaks, you could end the analysis here.
 
-#### Step 6: Combine potentially species-specific peaks that failed to make it into consensus set 
+#### Step 6: Combine potentially species-specific peaks that failed to make it into consensus set
 Export: [species]_spec_summits.bed
 For each species, we combine peaks that failed to lift from that species’ genome to the ancestral genome in Step A and peaks that originated from that species’ genome, lifted to the ancestral genome, but failed to lift back to one of the other species’ genomes in Step B. These represent potentially species-specific peaks that will be explored further.
 
@@ -101,12 +106,14 @@ Peaks that fall in categories 1-4 for all pairs of species are added to the cons
 #### Step 9: Prints a summary of how many peaks were retained and how many peaks were lost at each step
 
 #### Outputs:
+Files are saved in the Output folder as GenomicRanges objects in .rds files with the following names:
 ```R
-species_rd1_peaks
-species_allcon_peaks
-species_only_peaks
+species_rd1_peaks.rds
+species_allcon_peaks.rds
+species_only_peaks.rds
 ````
-Intermediate files are saved at each step but the final outputs (provided as Genomic Ranges objects in .rds format and .bed files) are:
+Bed files for each species are also exported to the same folder.
+Intermediate files are saved at each step (with the option to clean up or leave these files at the end) but the final outputs are:
 species_rd1_peaks: Consensus peaks from round 1 only in the form of a list with slots for each species that contains all round 1 and round 2 consensus peaks in the coordinates of each individual species genomes with corresponding names (i.e. Peak_1 has the same name and is the corresponding peak for all species). Therefore, all slots will have the exact same number of peaks.
 species_allcon_peaks: Same as above but including all round 1 and round 2 consensus peaks.
 Metadata columns are:
@@ -119,5 +126,9 @@ orig_name: original name corresponding to the names in the peak files for each s
 category: category referring to the lift over status. All species-only peaks should have categories #5,6,or 7 from the list in Step 7. 
 
 ### Downstream analysis:
-For differential accessibility analysis, after running CrossPeak, users will need to quantify counts for the consensus peaks and species-only peak sets for each cell/sample to obtain a counts matrix. For example, for single cell ATAC-seq data, this can be performed with Signac ```R FeatureMatrix```` or other tools. Then users can perform differential accessibility analysis on the consensus peak set using existing tools to test which peaks have increased or decreased accessibility across species, among other analyses. See our preprint listed above for examples of downstream analysis using CrossPeak outputs.
+For differential accessibility analysis, after running CrossPeak, users will need to quantify counts for the consensus peaks and species-only peak sets for each cell/sample to obtain a counts matrix. For example, for single cell ATAC-seq data, this can be performed with Signac
+```R
+FeatureMatrix
+````
+or other tools. Then users can perform differential accessibility analysis on the consensus peak set using existing tools to test which peaks have increased or decreased accessibility across species, among other analyses. See our preprint listed above for examples of downstream analysis using CrossPeak outputs.
 
