@@ -75,7 +75,7 @@ done
 
 # Steps 2 and 3: Run the next R script
 echo "Running Steps 2 and 3 in R..."
-Rscript "${base_folder}/CrossPeak_Steps2and3.R" > "${current_folder}/step2and3.log" 2>&1
+Rscript "${base_folder}/CrossPeak_Step2and3.R" > "${current_folder}/step2and3.log" 2>&1
 if [[ $? -ne 0 ]]; then
   echo "Error: Steps 2 and 3 failed. Check ${current_folder}/step2and3.log for details."
   exit 1
@@ -110,7 +110,7 @@ done
 
 # Steps 4, 5 and 6: Run the next R script
 echo "Running Steps 4, 5, and 6 in R..."
-Rscript "${base_folder}/CrossPeak_Steps4and5and6.R" > "${current_folder}/step4and5and6.log" 2>&1
+Rscript "${base_folder}/CrossPeak_Step4and5and6.R" > "${current_folder}/step4and5and6.log" 2>&1
 if [[ $? -ne 0 ]]; then
   echo "Error: Steps 4, 5, or 6 failed. Check ${current_folder}/step4and5and6.log for details."
   exit 1
@@ -222,9 +222,9 @@ done
 
 # Steps 8 and 9: Run the next R script
 echo "Running Steps 8 and 9 in R..."
-Rscript "${base_folder}/CrossPeak_Steps8and9.R" > "${current_folder}/steps8and9.log" 2>&1
+Rscript "${base_folder}/CrossPeak_Step8and9.R" > "${current_folder}/step8and9.log" 2>&1
 if [[ $? -ne 0 ]]; then
-  echo "Error: Step 8 or 9 failed. Check ${current_folder}/steps8and9.log for details."
+  echo "Error: Step 8 or 9 failed. Check ${current_folder}/step8and9.log for details."
   exit 1
 fi
 
