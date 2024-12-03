@@ -29,7 +29,9 @@ If you use HAL tools (https://github.com/ComparativeGenomicsToolkit/hal) with Cr
 Glenn Hickey, Benedict Paten, Dent Earl, Daniel Zerbino, and David Haussler. HAL: A Hierarchical Format for Storing and Analyzing Multiple Genome Alignments. Bioinformatics. 2013. https://doi.org/10.1093/bioinformatics/btt128
 
 If you use the primate HAL file we provide in the Example_dataset folder for your own analysis, then also cite the papers describing those genome alignments:
+
 Mao, Y., Catacchio, C.R., Hillier, L.W. et al. A high-quality bonobo genome refines the analysis of hominid evolution. Nature 594, 77–81 (2021). https://doi.org/10.1038/s41586-021-03519-x
+
 Zev N. Kronenberg et al. ,High-resolution comparative analysis of great ape genomes.Science360,eaar6343(2018).DOI:10.1126/science.aar6343
 
 ## Running CrossPeak
