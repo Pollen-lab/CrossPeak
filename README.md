@@ -32,7 +32,7 @@ If you use the primate HAL file we provide in the Example_dataset folder for you
 
 Mao, Y., Catacchio, C.R., Hillier, L.W. et al. A high-quality bonobo genome refines the analysis of hominid evolution. Nature 594, 77–81 (2021). https://doi.org/10.1038/s41586-021-03519-x
 
-Zev N. Kronenberg et al. ,High-resolution comparative analysis of great ape genomes.Science360,eaar6343(2018).DOI:10.1126/science.aar6343
+Zev N. Kronenberg et al. ,High-resolution comparative analysis of great ape genomes. Science360,eaar6343(2018). https://doi.org/10.1126/science.aar6343
 
 ## Running CrossPeak
 
@@ -131,9 +131,5 @@ orig_name: original name corresponding to the names in the peak files for each s
 category: category referring to the lift over status. All species-only peaks should have categories #5,6,or 7 from the list in Step 7. 
 
 ### Downstream analysis:
-For differential accessibility analysis, after running CrossPeak, users will need to quantify counts for the consensus peaks and species-only peak sets for each cell/sample to obtain a counts matrix. For example, for single cell ATAC-seq data, this can be performed with Signac
-```R
-FeatureMatrix
-````
-or other tools. Then users can perform differential accessibility analysis on the consensus peak set using existing tools to test which peaks have increased or decreased accessibility across species, among other analyses. See our preprint listed above for examples of downstream analysis using CrossPeak outputs.
+For differential accessibility analysis, after running CrossPeak, users will need to quantify counts for the consensus peaks and species-only peak sets for each cell/sample to obtain a counts matrix. For example, for single cell ATAC-seq data, this can be performed with Signac FeatureMatrix or other tools. Then users can perform differential accessibility analysis on the consensus peak set using existing tools to test which peaks have increased or decreased accessibility across species, among other analyses. See our preprint listed above for examples of downstream analysis using CrossPeak outputs.
 
